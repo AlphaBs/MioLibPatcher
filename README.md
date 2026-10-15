@@ -72,8 +72,7 @@ jattach <pid> load instrument=false MioLibPatcher.jar
 |-----------------------------|----------------------------------------------------------------------|
 | `cpu.name`                  | 替换 CPU 名称读取来源（oshi / VulkanMod）                                      |
 | `sable_rapier_path`         | Sable Rapier 原生库的绝对路径                                                |
-| `imgui.library.path`        | ImGui 原生库所在目录（与 `imgui.library.name` 同时指定时生效）                        |
-| `imgui.library.name`        | ImGui 原生库文件名                                                         |
+| `amethyst.imgui.moulberry92.path` | Absolute path of the Android Moulberry 1.92 native library; skips desktop extraction. |
 | `miolibpatcher.alc10`       | `true` 时启用 ALC10 补丁，默认 `false`                                       |
 | `miolibpatcher.sablerapier` | `true`/`false` 强制指定是否启用 Rapier 补丁；未设置时自动检测 `sable_rapier_path` 是否已设置 |
 | `miolibpatcher.asmBackport` | `true`（不区分大小写）时启用 ASM 补丁，默认关闭 |

@@ -75,8 +75,7 @@ registered transformers at load time.
 |-----------------------------|--------------------------------------------------------------------------------------------------|
 | `cpu.name`                  | Replaces the CPU name source (oshi / VulkanMod)                                                  |
 | `sable_rapier_path`         | Absolute path of the Sable Rapier native library                                                 |
-| `imgui.library.path`        | Directory of the ImGui native library (used together with `imgui.library.name`)                  |
-| `imgui.library.name`        | File name of the ImGui native library                                                            |
+| `amethyst.imgui.moulberry92.path` | Absolute path of the Android Moulberry 1.92 native library; skips desktop extraction. |
 | `miolibpatcher.alc10`       | `true` enables the ALC10 patch, default `false`                                                  |
 | `miolibpatcher.sablerapier` | `true`/`false` forces the Rapier patch on/off; when unset, detects if `sable_rapier_path` is set |
 | `miolibpatcher.asmBackport` | `true` (case-insensitive) enables the ASM patch; disabled by default |
