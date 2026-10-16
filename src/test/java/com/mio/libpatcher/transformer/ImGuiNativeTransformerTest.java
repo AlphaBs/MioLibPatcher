@@ -35,10 +35,18 @@ class ImGuiNativeTransformerTest {
         try {
             System.setProperty(property90, "/android/libimgui-moulberry90.so");
             System.setProperty(property92, "/android/libimgui-moulberry92.so");
-            verifySelection(90, System.getProperty(property90),
-                    "/android/libimgui-moulberry90.so", 0);
-            verifySelection(92, System.getProperty(property92),
-                    "/android/libimgui-moulberry92.so", 0);
+            verifySelection(
+                    90,
+                    System.getProperty(property90),
+                    "/android/libimgui-moulberry90.so",
+                    0
+            );
+            verifySelection(
+                    92,
+                    System.getProperty(property92),
+                    "/android/libimgui-moulberry92.so",
+                    0
+            );
         } finally {
             restoreProperty(property90, original90);
             restoreProperty(property92, original92);
@@ -59,17 +67,22 @@ class ImGuiNativeTransformerTest {
         String original = System.getProperty(property);
         String path = "/missing-android-native/libimgui-moulberry" + version + ".so";
         String className = "imgui.moulberry" + version + ".ImGui";
-        CtClass fixture = new ClassPool(true).makeClass(className);
+        CtClass fixture = new ClassPool(true)
+                .makeClass(className);
         try {
             System.setProperty(property, path);
             fixture.addField(CtField.make("public static String failure;", fixture));
-            fixture.makeClassInitializer().setBody(
+            fixture.makeClassInitializer()
+                    .setBody(
                     "{ try { System." + method + "(\"desktop-imgui\"); }"
                             + " catch (UnsatisfiedLinkError e) { failure = e.getMessage(); } }"
             );
             new ImGuiNativeTransformer(version).transform(fixture);
-            Class<?> loaded = new FixtureLoader().define(className, fixture.toBytecode());
-            String failure = (String) loaded.getField("failure").get(null);
+            Class<?> loaded = new FixtureLoader()
+                    .define(className, fixture.toBytecode());
+            String failure = (String) loaded
+                    .getField("failure")
+                    .get(null);
             // 실제 JNI 파일 없이도 공용 이름 대신 지정한 절대 경로를 시도했는지 확인한다.
             assertTrue(failure.contains(path), failure);
         } finally {
@@ -111,7 +124,8 @@ class ImGuiNativeTransformerTest {
                             + " extractions++; return \"/desktop/library.so\"; }",
                     fixture
             ));
-            fixture.makeClassInitializer().setBody(
+            fixture.makeClassInitializer()
+                    .setBody(
                     "{ selected = tryLoadFromClasspath(\"library\"); initialized = true; }"
             );
             new ImGuiNativeTransformer(version).transform(fixture);
