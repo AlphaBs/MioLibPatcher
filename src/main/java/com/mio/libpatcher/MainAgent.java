@@ -64,7 +64,8 @@ public class MainAgent {
         transformers.add(new CreateTransformer());
         transformers.add(new SableRapierLibTransformer());
         transformers.add(new VeilImGuiTransformer());
-        transformers.add(new AxiomTransformer());
+        transformers.add(new ImGuiNativeTransformer(92));
+        transformers.add(new ImGuiNativeTransformer(90));
         transformers.add(new ALC10Transformer());
         transformers.add(new ASMTransformer());
         transformers.add(new SmoothFontTransformer());

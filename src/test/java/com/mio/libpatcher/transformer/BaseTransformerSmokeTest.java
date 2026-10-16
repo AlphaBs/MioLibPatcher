@@ -167,7 +167,7 @@ class BaseTransformerSmokeTest {
         cc.addField(CtField.make("static int dummy;", cc));
         CtConstructor clinit = cc.makeClassInitializer();
         clinit.insertBefore("java.lang.System.load(\"abc\");");
-        assertTransformSucceeds(new AxiomTransformer(), cc);
+        assertTransformSucceeds(new ImGuiNativeTransformer(92), cc);
     }
 
     @Test

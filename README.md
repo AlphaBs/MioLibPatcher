@@ -24,7 +24,7 @@ MioLibPatcher 在类加载时对指定类进行字节码转换，目前包含以
 | `dev.ryanhcode.sable.physics.impl.rapier.Rapier3D`                                                                                                                                                                                     | 支持从系统属性 `sable_rapier_path` 加载 Sable 原生库                                  |
 | `bre.smoothfont.FontUtils`                                                                                                                                                                                                             | 字体缩放大小索引固定为 7（该方法用于判断字体缩放大小，但存在 bug，可能导致重启后缩放变为 1，字体会变得非常模糊）              |
 | `foundry.veil.impl.client.imgui.VeilImGuiImpl`                                                                                                                                                                                         | 禁用 ImGui 路径设置                                                             |
-| `imgui.moulberry92.ImGui`                                                                                                                                                                                                              | ImGui 原生库支持从系统属性指定路径/文件名加载                                                |
+| `imgui.moulberry92.ImGui`, `imgui.moulberry90.ImGui`                                                                                                                                                                                                              | ImGui 原生库支持从系统属性指定路径/文件名加载                                                |
 | `org.lwjgl.openal.ALC10`                                                                                                                                                                                                               | 可选：替换 `alcGetCurrentContext` 实现（需系统属性 `miolibpatcher.alc10=true`）         |
 | `org.objectweb.asm.*`（5 个 visitor 类）                                                                                                                                                                                                   | 可选：移除 visitor 构造器的 api 版本校验（修复 Applied Energistics 1，见下文说明）                     |
 
@@ -73,6 +73,7 @@ jattach <pid> load instrument=false MioLibPatcher.jar
 | `cpu.name`                  | 替换 CPU 名称读取来源（oshi / VulkanMod）                                      |
 | `sable_rapier_path`         | Sable Rapier 原生库的绝对路径                                                |
 | `amethyst.imgui.moulberry92.path` | Absolute path of the Android Moulberry 1.92 native library; skips desktop extraction. |
+| `amethyst.imgui.moulberry90.path` | Absolute path of the separate Android Moulberry 1.90 native library; skips desktop extraction. |
 | `miolibpatcher.alc10`       | `true` 时启用 ALC10 补丁，默认 `false`                                       |
 | `miolibpatcher.sablerapier` | `true`/`false` 强制指定是否启用 Rapier 补丁；未设置时自动检测 `sable_rapier_path` 是否已设置 |
 | `miolibpatcher.asmBackport` | `true`（不区分大小写）时启用 ASM 补丁，默认关闭 |

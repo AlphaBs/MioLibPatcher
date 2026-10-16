@@ -6,10 +6,18 @@ import javassist.CtConstructor;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
-public class AxiomTransformer implements BaseTransformer {
+public class ImGuiNativeTransformer implements BaseTransformer {
+    private final String targetClass;
+    private final String libraryProperty;
+
+    public ImGuiNativeTransformer(int version) {
+        this.targetClass = "imgui.moulberry" + version + ".ImGui";
+        this.libraryProperty = "amethyst.imgui.moulberry" + version + ".path";
+    }
+
     @Override
     public String getTargetClassName() {
-        return "imgui.moulberry92.ImGui";
+        return targetClass;
     }
 
     @Override
@@ -23,10 +31,11 @@ public class AxiomTransformer implements BaseTransformer {
         initializer.instrument(new ExprEditor() {
             @Override
             public void edit(MethodCall call) throws CannotCompileException {
-                if (call.getClassName().equals(getTargetClassName())
-                        && call.getMethodName().equals("tryLoadFromClasspath")) {
+                String owner = call.getClassName();
+                String method = call.getMethodName();
+                if (owner.equals(targetClass) && method.equals("tryLoadFromClasspath")) {
                     call.replace(
-                            "{ String path = System.getProperty(\"amethyst.imgui.moulberry92.path\");"
+                            "{ String path = System.getProperty(\"" + libraryProperty + "\");"
                                     + " if (path != null) { $_ = path; }"
                                     + " else { $_ = $proceed($$); } }"
                     );
