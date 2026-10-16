@@ -7,6 +7,7 @@ import javassist.CtMethod;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImGuiNativeTransformerTest {
 
@@ -41,6 +42,39 @@ class ImGuiNativeTransformerTest {
         } finally {
             restoreProperty(property90, original90);
             restoreProperty(property92, original92);
+        }
+    }
+
+    @Test
+    void nativeLoadCallsPreferVersionSpecificPath() throws Throwable {
+        for (int version : new int[] {90, 92}) {
+            for (String method : new String[] {"load", "loadLibrary"}) {
+                verifyNativeLoadOverride(version, method);
+            }
+        }
+    }
+
+    private void verifyNativeLoadOverride(int version, String method) throws Throwable {
+        String property = "amethyst.imgui.moulberry" + version + ".path";
+        String original = System.getProperty(property);
+        String path = "/missing-android-native/libimgui-moulberry" + version + ".so";
+        String className = "imgui.moulberry" + version + ".ImGui";
+        CtClass fixture = new ClassPool(true).makeClass(className);
+        try {
+            System.setProperty(property, path);
+            fixture.addField(CtField.make("public static String failure;", fixture));
+            fixture.makeClassInitializer().setBody(
+                    "{ try { System." + method + "(\"desktop-imgui\"); }"
+                            + " catch (UnsatisfiedLinkError e) { failure = e.getMessage(); } }"
+            );
+            new ImGuiNativeTransformer(version).transform(fixture);
+            Class<?> loaded = new FixtureLoader().define(className, fixture.toBytecode());
+            String failure = (String) loaded.getField("failure").get(null);
+            // 실제 JNI 파일 없이도 공용 이름 대신 지정한 절대 경로를 시도했는지 확인한다.
+            assertTrue(failure.contains(path), failure);
+        } finally {
+            fixture.detach();
+            restoreProperty(property, original);
         }
     }
 

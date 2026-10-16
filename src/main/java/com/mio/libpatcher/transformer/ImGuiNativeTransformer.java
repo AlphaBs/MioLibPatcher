@@ -27,13 +27,21 @@ public class ImGuiNativeTransformer implements BaseTransformer {
             return;
         }
 
-        // 데스크톱 네이티브 추출을 건너뛰되 이후 JNI 초기화는 그대로 수행한다.
+        // 지정한 외부 파일을 우선 로드하되 이후 JNI 초기화는 그대로 수행한다.
         initializer.instrument(new ExprEditor() {
             @Override
             public void edit(MethodCall call) throws CannotCompileException {
                 String owner = call.getClassName();
                 String method = call.getMethodName();
-                if (owner.equals(targetClass) && method.equals("tryLoadFromClasspath")) {
+                if (owner.equals("java.lang.System")
+                        && (method.equals("load") || method.equals("loadLibrary"))) {
+                    // 공용 imgui.library.name이 다른 버전의 라이브러리를 가리킬 수 있다.
+                    call.replace(
+                            "{ String path = System.getProperty(\"" + libraryProperty + "\");"
+                                    + " if (path != null) { java.lang.System.load(path); }"
+                                    + " else { $proceed($$); } }"
+                    );
+                } else if (owner.equals(targetClass) && method.equals("tryLoadFromClasspath")) {
                     call.replace(
                             "{ String path = System.getProperty(\"" + libraryProperty + "\");"
                                     + " if (path != null) { $_ = path; }"
